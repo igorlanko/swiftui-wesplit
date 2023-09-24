@@ -15,22 +15,23 @@ struct ContentView: View {
 	
 	let tipPercentages = [10, 15, 20, 25, 0]
 	
+	var totalCheck: Double {
+		let tipSelection = Double(tipPercentage)
+		let tipValue = checkAmount / 100 * tipSelection
+		
+		return checkAmount + tipValue
+	}
+	
 	var totalPerPerson: Double {
 		let peopleCount = Double(numberOfPeople + 2)
-		let tipSelection = Double(tipPercentage)
-		
-		let tipValue = checkAmount / 100 * tipSelection
-		let grandTotal = checkAmount + tipValue
-		let amountPerPerson = grandTotal / peopleCount
-		
-		return amountPerPerson
+		return totalCheck / peopleCount
 	}
 	
 	var body: some View {
 		NavigationView {
 			Form {
 				Section {
-					TextField("Amount", value: $checkAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+					TextField("Subtotal amount", value: $checkAmount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
 						.keyboardType(.decimalPad)
 						.focused($amountIsFocused)
 					
@@ -39,6 +40,8 @@ struct ContentView: View {
 							Text("\($0) people")
 						}
 					}
+				} header: {
+					Text("Subtotal")
 				}
 				
 				Section {
@@ -50,6 +53,14 @@ struct ContentView: View {
 					.pickerStyle(.segmented)
 				} header: {
 					Text("How much tip do you want to leave?")
+				}
+				
+				Section {
+					Text(totalCheck, format:
+							.currency(code: Locale.current.currency?.identifier ?? "USD")
+					)
+				} header: {
+					Text("Check total")
 				}
 				
 				Section {
