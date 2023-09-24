@@ -8,12 +8,20 @@
 import SwiftUI
 
 struct ContentView: View {
+	private var currencyCode: String {
+		return Locale.current.currency?.identifier ?? "USD"
+	}
+
+	private var currency: FloatingPointFormatStyle<Double>.Currency {
+		.currency(code: currencyCode)
+	}
+	
 	@State private var checkAmount = 0.0
 	@State private var numberOfPeople = 2
 	@State private var tipPercentage = 20
 	@FocusState private var amountIsFocused: Bool
 	
-	let tipPercentages = Array(1..<101)
+	let tipPercentages = Array(0..<101)
 	
 	var totalCheck: Double {
 		let tipSelection = Double(tipPercentage)
@@ -56,15 +64,13 @@ struct ContentView: View {
 				}
 				
 				Section {
-					Text(totalCheck, format:
-							.currency(code: Locale.current.currency?.identifier ?? "USD")
-					)
+					Text(totalCheck, format: currency)
 				} header: {
 					Text("Check total")
 				}
 				
 				Section {
-					Text(totalPerPerson, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+					Text(totalPerPerson, format: currency)
 						.keyboardType(.decimalPad)
 				} header: {
 					Text("Each should give")
